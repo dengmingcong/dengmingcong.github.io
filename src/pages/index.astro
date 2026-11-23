@@ -1,0 +1,63 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import PostList from '../components/PostList.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getPublishedPosts } from '../utils/posts';
+
+const posts = await getPublishedPosts();
+const latest = posts.slice(0, 5);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="intro">
+				<h1>你好，我是 dengmingcong 👋</h1>
+				<p>
+					这里存放我的技术笔记与项目实践，主要围绕 Python、自动化测试和工程效率展开。
+				</p>
+			</section>
+
+			<section class="latest">
+				<h2>最新文章</h2>
+				{latest.length === 0 ? (
+					<p>还没有发布任何文章。</p>
+				) : (
+					<PostList posts={latest} />
+				)}
+				<p class="more">
+					<a href="/blog">查看全部文章 →</a>
+				</p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.intro {
+		margin-bottom: 3em;
+	}
+	.intro h1 {
+		margin-bottom: 0.3em;
+	}
+	.intro p {
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	.latest h2 {
+		font-size: 1.6rem;
+		margin-bottom: 1em;
+	}
+	.more {
+		margin-top: 2.5em;
+		text-align: center;
+	}
+</style>

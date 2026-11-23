@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+import { GITHUB_USERNAME, SOCIAL_LINKS } from '../consts';
+---
+
+<Layout title="关于" description="关于 dengmingcong，以及这个博客。" pubDate={new Date()}>
+	<p>
+		你好，我是 <strong>{GITHUB_USERNAME}</strong>。一名主要使用 Python 的开发者，平时关注自动化测试、
+		接口工具链和一些提升工程效率的小工具。
+	</p>
+
+	<p>
+		这个博客是我自己的技术笔记归档，主要记录一些踩坑记录、工具用法和零散的想法。
+		文章大多以 Markdown 写成，少量需要交互组件时会用 MDX。
+	</p>
+
+	<h2>这里可能有</h2>
+	<ul>
+		<li>Python 与自动化测试相关的实践记录</li>
+		<li>自己写的开源小工具的用法与设计思路</li>
+		<li>日常遇到的问题排查过程</li>
+	</ul>
+
+	<h2>联系方式</h2>
+	<ul>
+		{
+			SOCIAL_LINKS.map((link) => (
+				<li>
+					<a href={link.href} target="_blank" rel="noopener noreferrer">
+						{link.label}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+
+	<p>
+		本站由 <a href="https://astro.build/">Astro</a> 构建，部署在 GitHub Pages，
+		代码托管在 <a href={`https://github.com/${GITHUB_USERNAME}`}>GitHub</a>。
+	</p>
+</Layout>

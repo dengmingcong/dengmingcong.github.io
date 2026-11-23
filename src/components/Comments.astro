@@ -1,0 +1,35 @@
+---
+import { COMMENTS_ENABLED, GISCUS_CONFIG } from '../consts';
+---
+
+{
+	COMMENTS_ENABLED && (
+		<section class="comments" id="comments">
+			<h2>评论</h2>
+			<iframe
+				src={`https://giscus.app/client?repo=${GISCUS_CONFIG.repo}&repoId=${GISCUS_CONFIG.repoId}&category=${GISCUS_CONFIG.category}&categoryId=${GISCUS_CONFIG.categoryId}&mapping=pathname&strict=0&reactionsEnabled=1&emitMetadata=0&inputPosition=bottom&theme=preferred_color_scheme&lang=zh-CN&loading=lazy`}
+				class="giscus-frame"
+				title="Giscus 评论"
+				allow="clipboard-write"
+				loading="lazy"
+			/>
+		</section>
+	)
+}
+
+<style>
+	.comments {
+		margin-top: 3em;
+		padding-top: 1.5em;
+		border-top: 1px solid var(--border);
+	}
+	.comments h2 {
+		font-size: 1.4rem;
+		margin-bottom: 1em;
+	}
+	.giscus-frame {
+		width: 100%;
+		min-height: 200px;
+		border: none;
+	}
+</style>

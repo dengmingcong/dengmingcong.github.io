@@ -1,0 +1,46 @@
+---
+import { GITHUB_USERNAME, SOCIAL_LINKS } from '../consts';
+import { Icon } from 'astro-icon/components';
+
+const today = new Date();
+---
+
+<footer>
+	&copy; {today.getFullYear()} {GITHUB_USERNAME}. All rights reserved.
+	<div class="social-links">
+		{
+			SOCIAL_LINKS.map((link) => (
+				<a href={link.href} target="_blank" rel="noopener noreferrer">
+					<span class="sr-only">{link.label}</span>
+					<Icon name={link.icon} />
+				</a>
+			))
+		}
+	</div>
+</footer>
+
+<style>
+	footer {
+		padding: 2em 1em 6em 1em;
+		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		color: var(--muted);
+		text-align: center;
+	}
+	.social-links {
+		display: flex;
+		justify-content: center;
+		gap: 1em;
+		margin-top: 1em;
+	}
+	.social-links a {
+		text-decoration: none;
+		color: var(--muted);
+	}
+	.social-links a:hover {
+		color: var(--heading);
+	}
+	.social-links :global(svg) {
+		width: 1.6em;
+		height: 1.6em;
+	}
+</style>

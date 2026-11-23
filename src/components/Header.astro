@@ -1,0 +1,96 @@
+---
+import { SITE_TITLE, SOCIAL_LINKS } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+import Search from './Search.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { Icon } from 'astro-icon/components';
+---
+
+<header>
+	<nav>
+		<h2>
+			<a href="/">{SITE_TITLE}</a>
+		</h2>
+		<div class="internal-links">
+			<HeaderLink href="/">首页</HeaderLink>
+			<HeaderLink href="/blog">文章</HeaderLink>
+			<HeaderLink href="/tags">标签</HeaderLink>
+			<HeaderLink href="/about">关于</HeaderLink>
+		</div>
+		<div class="right-links">
+			<Search />
+			<ThemeToggle />
+			<div class="social-links">
+				{
+					SOCIAL_LINKS.map((link) => (
+						<a href={link.href} target="_blank" rel="noopener noreferrer">
+							<span class="sr-only">{link.label}</span>
+							<Icon name={link.icon} />
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</nav>
+</header>
+
+<style>
+	header {
+		margin: 0;
+		padding: 0 1em;
+		background: var(--header-bg);
+		box-shadow: 0 2px 8px rgba(var(--gray), 5%);
+		transition: background-color 0.2s ease;
+	}
+	h2 {
+		margin: 0;
+		font-size: 1em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1em;
+	}
+	nav a {
+		padding: 1em 0.5em;
+		color: var(--heading);
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+	}
+	nav a.active {
+		text-decoration: none;
+		border-bottom-color: var(--accent);
+	}
+	.right-links {
+		display: flex;
+		align-items: center;
+		gap: 0.6em;
+	}
+	.social-links,
+	.social-links a {
+		display: flex;
+	}
+	.social-links a {
+		padding: 0.5em;
+	}
+	.social-links :global(svg) {
+		width: 1.35em;
+		height: 1.35em;
+	}
+	@media (max-width: 860px) {
+		.internal-links {
+			display: none;
+		}
+	}
+	@media (max-width: 720px) {
+		.social-links {
+			display: none;
+		}
+	}
+</style>

@@ -1,0 +1,292 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<div class="search" id="search">
+	<button type="button" id="search-open" aria-label="搜索文章" title="搜索文章（/）">
+		<Icon name="ri:search-line" />
+		<span>搜索</span>
+	</button>
+</div>
+
+<dialog id="search-dialog" aria-label="搜索文章">
+	<form method="dialog" class="search-form">
+		<Icon name="ri:search-line" class="search-form-icon" />
+		<input
+			type="search"
+			id="search-input"
+			placeholder="搜索文章…"
+			autocomplete="off"
+			spellcheck="false"
+			aria-label="搜索文章"
+		/>
+		<button type="button" id="search-close" aria-label="关闭搜索" title="关闭 (Esc)">
+			<Icon name="ri:close-line" />
+		</button>
+	</form>
+	<div id="search-results" class="search-results">
+		<p class="search-hint">输入关键词以搜索文章内容。</p>
+	</div>
+</dialog>
+
+<script>
+	type PagefindResult = {
+		id: string;
+		score: number;
+		data(): Promise<{
+			url: string;
+			excerpt: string;
+			meta: { title: string };
+		}>;
+	};
+	let pagefind: { search(query: string): Promise<{ results: PagefindResult[] }> } | null =
+		null;
+	let loading = false;
+
+	async function getPagefind() {
+		if (pagefind) return pagefind;
+		if (loading) return null;
+		loading = true;
+		try {
+			// Pagefind's index is generated at build time into /pagefind/.
+			// The path is built at runtime so the bundler does not try to
+			// resolve it (it does not exist during `astro dev`).
+			const modulePath = '/pagefind/pagefind.js';
+			const mod = await import(/* @vite-ignore */ modulePath);
+			pagefind = (mod as any).default ?? mod;
+			return pagefind;
+		} catch (err) {
+			console.error('Failed to load pagefind', err);
+			return null;
+		} finally {
+			loading = false;
+		}
+	}
+
+	function setupSearch() {
+		const openBtn = document.getElementById('search-open');
+		const dialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
+		const input = document.getElementById('search-input') as HTMLInputElement | null;
+		const results = document.getElementById('search-results');
+		const closeBtn = document.getElementById('search-close');
+
+		if (!openBtn || !dialog || !input || !results) return;
+
+		let debounce: ReturnType<typeof setTimeout> | undefined;
+
+		const open = () => {
+			dialog.showModal();
+			input.focus();
+		};
+
+		const close = () => {
+			dialog.close();
+			input.value = '';
+			results.innerHTML = '<p class="search-hint">输入关键词以搜索文章内容。</p>';
+		};
+
+		openBtn.addEventListener('click', open);
+		closeBtn?.addEventListener('click', close);
+
+		// Click on the backdrop (outside the dialog box) closes it.
+		dialog.addEventListener('click', (event) => {
+			if (event.target === dialog) close();
+		});
+
+		// "/" opens the search box, unless the user is already typing.
+		document.addEventListener('keydown', (event) => {
+			if (event.key === '/' && !dialog.open) {
+				const target = event.target as HTMLElement | null;
+				const tag = target?.tagName;
+				if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) {
+					return;
+				}
+				event.preventDefault();
+				open();
+			}
+		});
+
+		const render = async (query: string) => {
+			const pf = await getPagefind();
+			if (!pf) {
+				results.innerHTML =
+					'<p class="search-hint">搜索索引不可用（本地开发需先运行 pnpm build）。</p>';
+				return;
+			}
+
+			const search = await pf.search(query);
+			if (!search.results.length) {
+				results.innerHTML = `<p class="search-hint">没有找到与 “${escapeHtml(query)}” 相关的内容。</p>`;
+				return;
+			}
+
+			const items = await Promise.all(
+				search.results.slice(0, 20).map(async (result) => {
+					const data = await result.data();
+					// In Pagefind v1.6 the URL lives on the result's `data()`
+					// payload, not on the result object itself.
+					return {
+						url: data.url,
+						title: data.meta.title,
+						excerpt: data.excerpt,
+					};
+				})
+			);
+
+			results.innerHTML = items
+				.map(
+					(item) => `
+			<a class="search-result" href="${escapeHtml(item.url)}">
+				<span class="search-result-title">${escapeHtml(item.title)}</span>
+				<span class="search-result-excerpt">${item.excerpt}</span>
+			</a>`
+				)
+				.join('');
+		};
+
+		input.addEventListener('input', () => {
+			const query = input.value.trim();
+			clearTimeout(debounce);
+			if (!query) {
+				results.innerHTML = '<p class="search-hint">输入关键词以搜索文章内容。</p>';
+				return;
+			}
+			debounce = setTimeout(() => render(query), 200);
+		});
+	}
+
+	function escapeHtml(str: string) {
+		return str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;');
+	}
+
+	setupSearch();
+	document.addEventListener('astro:after-swap', setupSearch);
+</script>
+
+<style>
+	.search button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		padding: 0.4em 0.7em;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background: var(--surface);
+		color: var(--muted);
+		cursor: pointer;
+		font-size: 0.85rem;
+		font-family: inherit;
+		transition: background-color 0.2s ease, color 0.2s ease;
+	}
+	.search button:hover {
+		background: var(--surface-2);
+		color: var(--heading);
+	}
+	.search :global(svg) {
+		width: 1.05em;
+		height: 1.05em;
+	}
+
+	dialog {
+		width: min(640px, calc(100vw - 2em));
+		max-height: min(70vh, 640px);
+		padding: 0;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		background: var(--surface);
+		color: var(--text);
+		overflow: hidden;
+	}
+	dialog::backdrop {
+		background: rgba(0, 0, 0, 0.45);
+	}
+
+	.search-form {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		padding: 0.75em 1em;
+		border-bottom: 1px solid var(--border);
+	}
+	.search-form-icon {
+		width: 1.1em;
+		height: 1.1em;
+		color: var(--muted);
+		flex-shrink: 0;
+	}
+	.search-form input {
+		flex: 1;
+		border: none;
+		outline: none;
+		background: transparent;
+		color: var(--text);
+		font-family: inherit;
+		font-size: 1rem;
+	}
+	.search-form input::placeholder {
+		color: var(--muted);
+	}
+	.search-form button {
+		border: none;
+		background: transparent;
+		color: var(--muted);
+		cursor: pointer;
+		display: inline-flex;
+		padding: 0.2em;
+	}
+	.search-form button:hover {
+		color: var(--heading);
+	}
+	.search-form button :global(svg) {
+		width: 1.2em;
+		height: 1.2em;
+	}
+
+	.search-results {
+		max-height: calc(min(70vh, 640px) - 3.5em);
+		overflow-y: auto;
+		padding: 0.5em;
+	}
+	/* The result markup is injected at runtime via innerHTML, so it does not
+	   carry Astro's scope attribute — these selectors must be global. */
+	:global(.search-result) {
+		display: block;
+		padding: 0.7em 0.9em;
+		border-radius: 8px;
+		color: inherit;
+		text-decoration: none;
+	}
+	:global(.search-result:hover) {
+		background: var(--surface-2);
+	}
+	:global(.search-result-title) {
+		display: block;
+		color: var(--accent);
+		font-weight: 700;
+		font-size: 0.95rem;
+	}
+	:global(.search-result-excerpt) {
+		display: block;
+		margin-top: 0.2em;
+		color: var(--muted);
+		font-size: 0.8rem;
+		line-height: 1.5;
+	}
+	:global(.search-result-excerpt mark) {
+		background: var(--surface-2);
+		color: var(--heading);
+		border-radius: 2px;
+		padding: 0 0.1em;
+	}
+	:global(.search-hint) {
+		margin: 0;
+		padding: 1.5em 1em;
+		color: var(--muted);
+		font-size: 0.9rem;
+		text-align: center;
+	}
+</style>
