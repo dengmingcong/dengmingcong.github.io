@@ -35,8 +35,6 @@ export default defineConfig({
           /\/archives\/?$/.test(page)
         )
           return false;
-        // Redirect stubs for the old /blog/ paths must not be indexed.
-        if (/\/blog(\/|$)/.test(page)) return false;
         return true;
       },
     }),
