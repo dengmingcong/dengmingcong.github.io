@@ -27,8 +27,18 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: page =>
-        config.features?.showArchives !== false || !/\/archives\/?$/.test(page),
+      // The filter receives a full URL, not a path.
+      filter: page => {
+        // Keep the archives page out of the sitemap when the feature is off.
+        if (
+          config.features?.showArchives === false &&
+          /\/archives\/?$/.test(page)
+        )
+          return false;
+        // Redirect stubs for the old /blog/ paths must not be indexed.
+        if (/\/blog(\/|$)/.test(page)) return false;
+        return true;
+      },
     }),
     inlineTocDeprecation(),
   ],

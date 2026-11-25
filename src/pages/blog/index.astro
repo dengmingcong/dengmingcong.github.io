@@ -1,0 +1,9 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// The blog used to live under /blog/. AstroPaper puts posts under /posts/,
+// so redirect the old path to the new listing page.
+const target = getRelativeLocaleUrl(Astro.currentLocale ?? "zh-CN", "posts");
+
+return Astro.redirect(target, 301);
+---
