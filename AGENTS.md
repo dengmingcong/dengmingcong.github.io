@@ -8,6 +8,29 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Project
+
+Personal blog built with [AstroPaper](https://github.com/satnaing/astro-paper).
+Site config lives in `astro-paper.config.ts` — read it before changing site
+metadata, features, social links or share links.
+
+UI strings live in `src/i18n/lang/zh-CN.ts` (Chinese is the only locale).
+Keep the interface in Chinese when adding new strings.
+
+## Upgrading the theme
+
+AstroPaper is consumed as a source fork, not a dependency. To pull in upstream
+changes:
+
+```bash
+git remote add upstream https://github.com/satnaing/astro-paper.git
+git fetch upstream
+git diff upstream/main -- src/
+```
+
+Files in `src/custom/`, `astro-paper.config.ts` and `src/i18n/lang/zh-CN.ts`
+are ours and rarely conflict.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

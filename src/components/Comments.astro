@@ -1,35 +1,53 @@
 ---
-import { COMMENTS_ENABLED, GISCUS_CONFIG } from '../consts';
+import { COMMENTS_ENABLED, GISCUS_CONFIG } from "@/config/giscus";
 ---
 
 {
-	COMMENTS_ENABLED && (
-		<section class="comments" id="comments">
-			<h2>评论</h2>
-			<iframe
-				src={`https://giscus.app/client?repo=${GISCUS_CONFIG.repo}&repoId=${GISCUS_CONFIG.repoId}&category=${GISCUS_CONFIG.category}&categoryId=${GISCUS_CONFIG.categoryId}&mapping=pathname&strict=0&reactionsEnabled=1&emitMetadata=0&inputPosition=bottom&theme=preferred_color_scheme&lang=zh-CN&loading=lazy`}
-				class="giscus-frame"
-				title="Giscus 评论"
-				allow="clipboard-write"
-				loading="lazy"
-			/>
-		</section>
-	)
+  COMMENTS_ENABLED && (
+    <section class="mt-12" id="comments" aria-label="评论">
+      <h2 class="mb-6 text-xl font-semibold">评论</h2>
+      <div
+        id="giscus-container"
+        data-repo={GISCUS_CONFIG.repo}
+        data-repo-id={GISCUS_CONFIG.repoId}
+        data-category={GISCUS_CONFIG.category}
+        data-category-id={GISCUS_CONFIG.categoryId}
+      />
+    </section>
+  )
 }
 
-<style>
-	.comments {
-		margin-top: 3em;
-		padding-top: 1.5em;
-		border-top: 1px solid var(--border);
-	}
-	.comments h2 {
-		font-size: 1.4rem;
-		margin-bottom: 1em;
-	}
-	.giscus-frame {
-		width: 100%;
-		min-height: 200px;
-		border: none;
-	}
-</style>
+<script define:vars={{ giscus: COMMENTS_ENABLED ? GISCUS_CONFIG : null }}>
+  function renderGiscus() {
+    const container = document.getElementById("giscus-container");
+    if (!container || !giscus) return;
+
+    // Giscus 挂载后会把 iframe 插入容器；已挂载则不再重复插入。
+    if (container.querySelector("iframe")) return;
+
+    const theme =
+      document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.setAttribute("data-repo", giscus.repo);
+    script.setAttribute("data-repo-id", giscus.repoId);
+    script.setAttribute("data-category", giscus.category);
+    script.setAttribute("data-category-id", giscus.categoryId);
+    script.setAttribute("data-mapping", "pathname");
+    script.setAttribute("data-strict", "0");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "0");
+    script.setAttribute("data-input-position", "bottom");
+    script.setAttribute("data-theme", theme);
+    script.setAttribute("data-lang", "zh-CN");
+    script.setAttribute("data-loading", "lazy");
+    container.appendChild(script);
+  }
+
+  renderGiscus();
+
+  // Astro 使用客户端路由，切换文章后需要重新挂载评论。
+  document.addEventListener("astro:after-swap", renderGiscus);
+</script>

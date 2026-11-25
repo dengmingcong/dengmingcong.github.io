@@ -1,0 +1,20 @@
+---
+// Rendered on each post page, after the share links and before the
+// previous/next links. Add comments, a newsletter form or an author bio
+// here; use `post` to skip some posts. This file is yours: AstroPaper
+// never changes it after release.
+import type { CollectionEntry } from "astro:content";
+import Comments from "@/components/Comments.astro";
+
+type Props = {
+  post: CollectionEntry<"posts">;
+};
+
+const { post } = Astro.props;
+
+// `post` is available here if you ever need per-post behaviour
+// (e.g. disabling comments on drafts or specific series).
+const showComments = !post.data.draft;
+---
+
+{showComments && <Comments />}
