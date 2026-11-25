@@ -104,11 +104,7 @@ export default defineAstroPaperConfig({
 
 在 `src/content/posts/` 下新建 `.md` 或 `.mdx` 文件，文件名即 URL slug。
 
-> **路径对照**：内容目录是 `src/content/posts/`，但对外 URL 是 `/blog/<slug>/`
-> （AstroPaper 默认是 `/posts/`，本站改成了 `/blog/`）。
-> 改路径要同步这几处：`src/pages/blog/` 路由目录、`src/utils/getPostPaths.ts`
-> 里的 `getPostUrl()`、`src/components/Header.astro` 与 `src/pages/index.astro`
-> 的导航链接、`src/components/Breadcrumb.astro` 的面包屑分段名。
+> 内容目录与 URL 一一对应：`src/content/posts/hello-world.md` → `/posts/hello-world/`
 
 ```markdown
 ---
