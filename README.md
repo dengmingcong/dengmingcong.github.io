@@ -18,7 +18,7 @@
 | 订阅     | RSS                                                          |
 | 站点地图 | `@astrojs/sitemap`                                           |
 | 部署     | GitHub Actions（`withastro/action`）                         |
-| 界面语言 | 中文（`src/i18n/lang/zh-CN.ts`）                             |
+| 界面语言 | English（`src/i18n/lang/en.ts`）                             |
 
 ## 本地开发
 
@@ -60,7 +60,7 @@ src/
 │   ├── Head.astro    # <head> 内插入
 │   └── PostEnd.astro # 文章页末尾插入（评论区就挂在这里）
 ├── i18n/
-│   └── lang/zh-CN.ts # 界面文案
+│   └── lang/en.ts # 界面文案
 ├── layouts/          # 页面布局
 ├── pages/            # 路由
 ├── scripts/          # 客户端脚本
@@ -79,10 +79,10 @@ src/
 export default defineAstroPaperConfig({
   site: {
     url: "https://dengmingcong.github.io/",
-    title: "dengmingcong · 技术笔记",
-    description: "Python、自动化测试与工程实践的笔记归档。",
+    title: "dengmingcong",
+    description: "Notes on Python, automated testing, and engineering practice.",
     author: "dengmingcong",
-    lang: "zh-CN",
+    lang: "en",
     timezone: "Asia/Shanghai",
     ogImage: "og-default.jpg",
   },
@@ -140,7 +140,7 @@ ogImage: ../../assets/xxx.jpg # 可选
 
 `pnpm build` 会在构建后自动执行 `pagefind --site dist`，生成静态搜索索引。
 
-搜索界面文案已汉化，翻译键在 `src/pages/search.astro` 的 `translations` 选项中。
+搜索界面文案在 `src/pages/search.astro` 的 `translations` 选项中配置。
 
 按 `/` 可快速聚焦搜索框。
 
@@ -190,7 +190,7 @@ git diff upstream/main -- src/          # 查看上游改动
 ```
 
 主题把留给用户定制的部分放在了 `src/custom/`、`astro-paper.config.ts` 和
-`src/i18n/lang/zh-CN.ts` 里，这些文件升级时通常不会冲突。
+`src/i18n/lang/en.ts` 里，这些文件升级时通常不会冲突。
 
 ## 许可
 

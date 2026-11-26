@@ -14,8 +14,9 @@ Personal blog built with [AstroPaper](https://github.com/satnaing/astro-paper).
 Site config lives in `astro-paper.config.ts` — read it before changing site
 metadata, features, social links or share links.
 
-UI strings live in `src/i18n/lang/zh-CN.ts` (Chinese is the only locale).
-Keep the interface in Chinese when adding new strings.
+UI strings live in `src/i18n/lang/en.ts` (English is the only locale). Keep the
+interface in English when adding new strings. Article content under
+`src/content/posts/` is written in Chinese and should stay that way.
 
 ## Upgrading the theme
 
@@ -28,8 +29,8 @@ git fetch upstream
 git diff upstream/main -- src/
 ```
 
-Files in `src/custom/`, `astro-paper.config.ts` and `src/i18n/lang/zh-CN.ts`
-are ours and rarely conflict.
+Files in `src/custom/`, `astro-paper.config.ts` and `src/i18n/lang/en.ts` are
+ours and rarely conflict.
 
 ## Documentation
 

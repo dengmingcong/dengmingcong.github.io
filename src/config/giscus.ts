@@ -1,12 +1,15 @@
 /**
- * Giscus 评论配置。
+ * Giscus comment configuration.
  *
- * 获取步骤：
- * 1. 在仓库 Settings → General → Features 中开启 Discussions
- * 2. 访问 https://giscus.app 填写仓库信息并授权 Giscus App
- * 3. 从页面复制 repoId、categoryId、clientID
+ * Setup:
+ * 1. Enable Discussions in the repository under
+ *    Settings → General → Features
+ * 2. Go to https://giscus.app, fill in the repository details and authorise
+ *    the Giscus app
+ * 3. Copy `repoId`, `categoryId` and `clientID` from the page
  *
- * 任意一项为空时，评论区不会渲染，站点构建与发布不受影响。
+ * While any of these are empty the comment section is not rendered at all,
+ * so the site builds and deploys fine without them.
  */
 export const GISCUS_CONFIG = {
   repo: "" as `${string}/${string}`,

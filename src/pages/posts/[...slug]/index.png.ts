@@ -36,14 +36,34 @@ export const GET: APIRoute = async ({ props, url }) => {
     throw new Error("Cannot find the font path.");
   }
 
-  const [regularData, boldData] = await Promise.all([
-    fetch(experimental_getFontFileURL(regularFontPath, url)).then(res =>
-      res.arrayBuffer()
-    ),
-    fetch(experimental_getFontFileURL(boldFontPath, url)).then(res =>
-      res.arrayBuffer()
-    ),
-  ]);
+  // Google Sans Code has no CJK glyphs, so Chinese titles need a second
+  // font. Satori falls back to the next font that has a glyph for the
+  // character, so listing the CJK font after the Latin one covers both.
+  const cjkFonts = fontData["--font-noto-sans-sc"];
+  const cjkRegularPath = getFontPathByWeight(cjkFonts, 400, {
+    format: "woff2",
+  });
+  const cjkBoldPath = getFontPathByWeight(cjkFonts, 700, { format: "woff2" });
+
+  const [regularData, boldData, cjkRegularData, cjkBoldData] =
+    await Promise.all([
+      fetch(experimental_getFontFileURL(regularFontPath, url)).then(res =>
+        res.arrayBuffer()
+      ),
+      fetch(experimental_getFontFileURL(boldFontPath, url)).then(res =>
+        res.arrayBuffer()
+      ),
+      cjkRegularPath
+        ? fetch(experimental_getFontFileURL(cjkRegularPath, url)).then(res =>
+            res.arrayBuffer()
+          )
+        : Promise.resolve(undefined),
+      cjkBoldPath
+        ? fetch(experimental_getFontFileURL(cjkBoldPath, url)).then(res =>
+            res.arrayBuffer()
+          )
+        : Promise.resolve(undefined),
+    ]);
 
   const svg = await satori(
     {
@@ -183,6 +203,26 @@ export const GET: APIRoute = async ({ props, url }) => {
           weight: 700,
           style: "normal",
         },
+        ...(cjkRegularData
+          ? [
+              {
+                name: "Noto Sans SC",
+                data: cjkRegularData,
+                weight: 400 as const,
+                style: "normal" as const,
+              },
+            ]
+          : []),
+        ...(cjkBoldData
+          ? [
+              {
+                name: "Noto Sans SC",
+                data: cjkBoldData,
+                weight: 700 as const,
+                style: "normal" as const,
+              },
+            ]
+          : []),
       ],
     }
   );

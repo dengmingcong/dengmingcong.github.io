@@ -4,8 +4,8 @@ import { COMMENTS_ENABLED, GISCUS_CONFIG } from "@/config/giscus";
 
 {
   COMMENTS_ENABLED && (
-    <section class="mt-12" id="comments" aria-label="评论">
-      <h2 class="mb-6 text-xl font-semibold">评论</h2>
+    <section class="mt-12" id="comments" aria-label="Comments">
+      <h2 class="mb-6 text-xl font-semibold">Comments</h2>
       <div
         id="giscus-container"
         data-repo={GISCUS_CONFIG.repo}
@@ -22,7 +22,8 @@ import { COMMENTS_ENABLED, GISCUS_CONFIG } from "@/config/giscus";
     const container = document.getElementById("giscus-container");
     if (!container || !giscus) return;
 
-    // Giscus 挂载后会把 iframe 插入容器；已挂载则不再重复插入。
+    // Giscus injects an iframe into the container once mounted; skip if it is
+    // already there.
     if (container.querySelector("iframe")) return;
 
     const theme =
@@ -41,13 +42,13 @@ import { COMMENTS_ENABLED, GISCUS_CONFIG } from "@/config/giscus";
     script.setAttribute("data-emit-metadata", "0");
     script.setAttribute("data-input-position", "bottom");
     script.setAttribute("data-theme", theme);
-    script.setAttribute("data-lang", "zh-CN");
+    script.setAttribute("data-lang", "en");
     script.setAttribute("data-loading", "lazy");
     container.appendChild(script);
   }
 
   renderGiscus();
 
-  // Astro 使用客户端路由，切换文章后需要重新挂载评论。
+  // Astro uses client-side routing, so re-mount the comments after a swap.
   document.addEventListener("astro:after-swap", renderGiscus);
 </script>

@@ -41,8 +41,8 @@ export default defineConfig({
     inlineTocDeprecation(),
   ],
   i18n: {
-    locales: ["zh-CN"],
-    defaultLocale: "zh-CN",
+    locales: ["en"],
+    defaultLocale: "en",
     routing: {
       prefixDefaultLocale: false,
     },
@@ -83,6 +83,22 @@ export default defineConfig({
       weights: [300, 400, 500, 600, 700],
       styles: ["normal", "italic"],
       formats: ["woff", "ttf"],
+    },
+    {
+      // A CJK-capable font for the dynamic OG images. Satori renders the
+      // post title with these fonts, and Google Sans Code has no Chinese
+      // glyphs, so CJK titles would render as tofu boxes without this.
+      name: "Noto Sans SC",
+      cssVariable: "--font-noto-sans-sc",
+      provider: fontProviders.npm(),
+      fallbacks: ["sans-serif"],
+      weights: [400, 700],
+      styles: ["normal"],
+      formats: ["woff2"],
+      options: {
+        package: "@fontsource/noto-sans-sc",
+        file: "chinese-simplified-400.css",
+      },
     },
   ],
   env: {

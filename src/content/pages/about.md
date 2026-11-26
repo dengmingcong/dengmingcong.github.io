@@ -1,24 +1,28 @@
 ---
-title: "关于"
-description: "关于 dengmingcong，以及这个博客。"
+title: "About"
+description: "About dengmingcong and this blog."
 ---
 
-你好，我是 **dengmingcong**。一名主要使用 Python 的开发者，平时关注自动化测试、
-接口工具链和一些提升工程效率的小工具。
+Hi, I'm **dengmingcong**. A developer who mostly works in Python, with a focus
+on automated testing, API tooling, and small utilities that speed up everyday
+engineering work.
 
-这个博客是我自己的技术笔记归档，主要记录一些踩坑记录、工具用法和零散的想法。
-文章大多以 Markdown 写成，少量需要交互组件时会用 MDX。
+This blog is my own notebook for technical notes — mostly the problems I hit
+and how I fixed them, plus notes on the tools I build. Posts are written in
+Markdown, with the occasional MDX when a post needs an interactive component.
 
-## 这里可能有
+## What you'll find here
 
-- Python 与自动化测试相关的实践记录
-- 自己写的开源小工具的用法与设计思路
-- 日常遇到的问题排查过程
+- Notes on Python and automated testing
+- Usage notes and design thoughts for my own open-source tools
+- Post-mortems of day-to-day debugging
 
-## 联系方式
+## Get in touch
 
 - [GitHub](https://github.com/dengmingcong)
 - [Email](mailto:mc.deng@outlook.com)
 
-本站由 [Astro](https://astro.build/) 构建，主题是 [AstroPaper](https://github.com/satnaing/astro-paper)，
-部署在 GitHub Pages，代码托管在 [GitHub](https://github.com/dengmingcong/dengmingcong.github.io)。
+Built with [Astro](https://astro.build/), themed with
+[AstroPaper](https://github.com/satnaing/astro-paper), deployed on GitHub
+Pages. Source lives on
+[GitHub](https://github.com/dengmingcong/dengmingcong.github.io).

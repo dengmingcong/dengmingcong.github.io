@@ -3,12 +3,13 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://dengmingcong.github.io/",
-    title: "dengmingcong · 技术笔记",
-    description: "Python、自动化测试与工程实践的笔记归档。",
+    title: "dengmingcong",
+    description:
+      "Notes on Python, automated testing, and engineering practice.",
     author: "dengmingcong",
     profile: "https://github.com/dengmingcong",
     ogImage: "og-default.jpg",
-    lang: "zh-CN",
+    lang: "en",
     timezone: "Asia/Shanghai",
     dir: "ltr",
   },
