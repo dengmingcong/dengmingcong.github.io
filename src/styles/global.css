@@ -6,6 +6,13 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @layer base {
+  /* 根字号。Tailwind 的字号工具类全部基于 rem，正文排版用的是相对 em，
+     所以在这里调整会等比缩放全站文字（含标题、导航、正文、代码块）。
+     浏览器默认为 16px，这里略微调小以适应中文排版的紧凑观感。 */
+  html {
+    font-size: 14px;
+  }
+
   * {
     @apply border-border outline-accent/75;
     scrollbar-width: auto;
